@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>WebSocket test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript">
+            var ws = null;
+
+            function setLocalhost() {
+                document.getElementById("target").value = "ws://localhost:9999";
+            }
+
+            function setEchoServer() {
+                document.getElementById("target").value = "ws://echo.websocket.org";
+            }
+
+            function connect()
+            {
+                var output = document.getElementById("output");
+
+                if ("WebSocket" in window)
+                {
+                    output.innerHTML += "WebSocket is supported by your Browser!<br>";
+
+                    if (ws) {
+                        ws.close();
+                    }
+
+                    ws = new WebSocket(document.getElementById("target").value);
+
+                    ws.onopen = function ()
+                    {
+                        output.innerHTML += "Connection opened.<br>";
+                    };
+
+                    ws.onmessage = function (evt)
+                    {
+                        var received_msg = evt.data;
+                        output.innerHTML += "Message received: " + received_msg + "<br>";
+                    };
+
+                    ws.onclose = function ()
+                    {
+                        output.innerHTML += "Connection closed.<br>";
+                    };
+                } else {
+                    output.innerHTML += "WebSocket NOT supported by your Browser!<br>";
+                }
+            }
+
+            function disconnect() {
+                var output = document.getElementById("output");
+
+                if (ws) {
+                    ws.close();
+                    ws = null;
+                } else {
+                    output.innerHTML += "Error: not connected.<br>";
+                }
+            }
+
+            function sendMessage() {
+                var output = document.getElementById("output");
+
+                if (ws) {
+                    var message = document.getElementById("message").value;
+                    ws.send(message);
+                    output.innerHTML += "Message sent: " + message + "<br>";
+                } else {
+                    output.innerHTML += "Error: not connected.<br>";
+                }
+            }
+            
+            function clearOutput() {
+                document.getElementById("output").innerHTML = "";
+            }
+
+        </script>
+
+    </head>
+    <body>
+        <h1>WebSocket test</h1>
+        <button onclick="setLocalhost();">Localhost</button>
+        <button onclick="setEchoServer();">Echo server</button>
+        <br><br>
+        <input id="target" type="text" value="ws://localhost:9999">
+        <button onclick="connect();">Connect</button>
+        <br><br>
+        <input id="message" type="text" value="hello">
+        <button onclick="sendMessage();">Send message</button>
+        <br><br>
+        <button onclick="disconnect();">Disconnect</button>
+        <br><br>
+        <button onclick="clearOutput();">Clear log</button>
+        <br><br>
+        <pre id="output"></pre>
+    </body>
+</html>

@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Ajax test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="jquery-3.2.1.min.js"></script>
+        <script>
+            function setLocalhost() {
+                document.getElementById("target").value = "http://localhost:8080";
+            }
+
+            function setTestTxt() {
+                document.getElementById("target").value = "test.txt";
+            }
+
+
+            function sendAjax() {
+                $.ajax({
+                    url: document.getElementById("target").value,
+                    xhrFields: {
+                        //withCredentials: true
+                    },
+                    method: 'get'
+                })
+                .done(function (data) {
+                    document.getElementById("output").innerHTML += "Response: " + data + "<br>";
+                })
+                .fail(function (xhr) {
+                    document.getElementById("output").innerHTML += "Error, status: " + xhr.status + "<br>";
+                });
+                document.getElementById("output").innerHTML += "Making request.<br>";
+            }
+            
+            function clearOutput() {
+                document.getElementById("output").innerHTML = "";
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Ajax test</h1>
+        <button onclick="setLocalhost();">Localhost</button>
+        <button onclick="setTestTxt();">Test.txt</button>
+        <br><br>
+        <input id="target" type="text" value="http://localhost:8080">
+        <button onclick="sendAjax();">Make Ajax request</button>
+        <br><br>
+        <button onclick="clearOutput();">Clear log</button>
+        <br><br>
+        <pre id="output"></pre>
+    </body>
+</html>
